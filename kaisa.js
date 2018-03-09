@@ -50,13 +50,13 @@
     setTimeout(function(){
         OpAjax("./depository/getAccountInfo",{},function (data) {
             if(data.code==0){
-                var btn = $("#btn_container").children()[0];
                 var done=false;
                 var count=0;
                 var loop=setInterval(function(){
                     if(count++ %1000 == 0) {
                         console.log("count");
                     }
+                    var btn = $("#btn_container").children()[0];
                     if(btn.id==="loanviewsbtn" && !done) {
                         $('#fullInvest').click();
                         investFormSubmit();
