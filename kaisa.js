@@ -57,14 +57,12 @@
                         var btn = $("#btn_container").children()[0];
                         if(btn.id==="loanviewsbtn" && !done) {
                             $('#fullInvest').click();
-                            investFormSubmit();
+                            btn.click();
                             done=true;
                             console.log("done");
                             clearInterval(loop);
                         }
                     },0);
-                } else {
-                    console.log("script applied");
                 }
             } else {
                 var loginData={
