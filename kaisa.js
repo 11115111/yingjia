@@ -52,6 +52,7 @@
             if(data.code==0){
                 var done=false;
                 if($("#myHint").length <= 0) {
+                    $('#fullInvest').click();
                     $("#your_interest").parent().html($("#your_interest").parent().html() + '<span id="myHint" style="color:red">   抢标中</span>');
                     var loop=setInterval(function(){
                         var btn = $("#btn_container").children()[0];
