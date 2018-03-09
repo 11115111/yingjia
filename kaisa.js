@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name        
+// @name         佳兆业投标
 // @namespace    https://www.kaisafax.com
 // @version      0.1
 // @description  try to take over the world!
@@ -51,20 +51,21 @@
         OpAjax("./depository/getAccountInfo",{},function (data) {
             if(data.code==0){
                 var done=false;
-                var count=0;
-                var loop=setInterval(function(){
-                    if(count++ %1000 == 0) {
-                        console.log("count");
-                    }
-                    var btn = $("#btn_container").children()[0];
-                    if(btn.id==="loanviewsbtn" && !done) {
-                        $('#fullInvest').click();
-                        investFormSubmit();
-                        done=true;
-                        console.log("done");
-                        clearInterval(loop);
-                    }
-                },0);
+                if($("#myHint").length <= 0) {
+                    $("#your_interest").parent().html($("#your_interest").parent().html() + '<span id="myHint" style="color:red">   抢标中</span>');
+                    var loop=setInterval(function(){
+                        var btn = $("#btn_container").children()[0];
+                        if(btn.id==="loanviewsbtn" && !done) {
+                            $('#fullInvest').click();
+                            investFormSubmit();
+                            done=true;
+                            console.log("done");
+                            clearInterval(loop);
+                        }
+                    },0);
+                } else {
+                    console.log("script applied");
+                }
             } else {
                 var loginData={
                     username:userInput,
