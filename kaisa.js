@@ -86,8 +86,8 @@
 
     function loopQuery(){
         var loop=setInterval(function(){
-            var btn = $("#btn_container").children()[0];
-            if(btn.id==="loanviewsbtn" && !querying && !queryDone) {
+            var btn = $("#btn_container").find('#loanviewsbtn').first();
+            if(btn.length > 0 && !querying && !queryDone) {
                 $('#fullInvest').click();
                 querying=true;
                 btn.click();
