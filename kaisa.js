@@ -13,6 +13,15 @@
     // Your code here...
     var userInput="";
     var passwordInput="";
+    var queryDone=false;
+    var querying=false;
+    var endTime=new Date($('#object_description').find('span.name').filter(function() {
+        return $(this).text().indexOf('筹款时间') == 0;
+    }).first().siblings('span.content').first().text()).valueOf();
+    var thisRef=window.location.href;
+    var pattern='loanId=';
+    var LoanId=thisRef.substr(pattern.length+thisRef.indexOf(pattern));
+
     function OpAjaxLocal(Url,Data,callFun){
         var ectData=Data,ectUrl=Url;
         if(isRsa=='true'){
@@ -47,23 +56,64 @@
 
     }
 
+    function preInvestLocal(LoanId) {
+        console.log('preInvestLocal');
+
+        if(!querying && !queryDone) {
+            querying=true;
+            $('#fullInvest').click();
+            OpAjax('./depository/preInvest',{amount:$('#investAmountInput').val(),loanId:LoanId},function (data) {
+                if(data.code==0){
+                    orderId=data.data.orderId;
+                    if(userAccountDetail.isOpenCFCA==false){
+                        console.log(data.msg);
+                    }else {
+                        queryDone=true;
+                        transactionPwd_verification();
+                    }
+                }else {
+                    console.log(data.msg);
+                    if(!queryDone) {
+                        setTimeout(function(){
+                            preInvestLocal(LoanId);
+                        }, 200);
+                    }
+                }
+                querying=false;
+            });
+        }
+    }
+
+    function loopQuery(){
+        var loop=setInterval(function(){
+            var btn = $("#btn_container").children()[0];
+            if(btn.id==="loanviewsbtn" && !querying && !queryDone) {
+                $('#fullInvest').click();
+                querying=true;
+                btn.click();
+                queryDone=true;
+                console.log("done");
+                clearInterval(loop);
+            } else if(queryDone) {
+                clearInterval(loop);
+            }
+        },0);
+    }
+
     setTimeout(function(){
         OpAjax("./depository/getAccountInfo",{},function (data) {
             if(data.code==0){
-                var done=false;
+
                 if($("#myHint").length <= 0) {
                     $('#fullInvest').click();
                     $("#your_interest").parent().html($("#your_interest").parent().html() + '<span id="myHint" style="color:red">   抢标中</span>');
-                    var loop=setInterval(function(){
-                        var btn = $("#btn_container").children()[0];
-                        if(btn.id==="loanviewsbtn" && !done) {
-                            $('#fullInvest').click();
-                            btn.click();
-                            done=true;
-                            console.log("done");
-                            clearInterval(loop);
-                        }
-                    },0);
+
+                    if(endTime - new Date().valueOf() - 1000 > 0) {
+                        setTimeout(function(){
+                            preInvestLocal(LoanId);
+                        }, endTime - new Date().valueOf() - 1000);
+                    }
+                    loopQuery();
                 }
             } else {
                 var loginData={
