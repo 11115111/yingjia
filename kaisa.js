@@ -61,7 +61,7 @@
 
         if(!querying && !queryDone) {
             querying=true;
-            $('#fullInvest').click();
+            //$('#fullInvest').click();
             OpAjax('./depository/preInvest',{amount:$('#investAmountInput').val(),loanId:LoanId},function (data) {
                 if(data.code==0){
                     orderId=data.data.orderId;
@@ -88,7 +88,7 @@
         var loop=setInterval(function(){
             var btn = $("#btn_container").find('#loanviewsbtn').first();
             if(btn.length > 0 && !querying && !queryDone) {
-                $('#fullInvest').click();
+                //$('#fullInvest').click();
                 querying=true;
                 btn.click();
                 queryDone=true;
